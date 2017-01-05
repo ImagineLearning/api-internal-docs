@@ -38,8 +38,14 @@ Only branches matching the following build specifications will be tested and bui
 - master
 - feat/*
 - bug/*
+- patch/*
 
-Master is the only branch the will be promoted to the test environment through Octopus Deploy.  The other branches will only be built and tested by TeamCity.
+Master and patch/* are the only branch the will be promoted to the test environment through Octopus Deploy.  The other branches will only be built and tested by TeamCity. See the [Patching Builds](#patching-builds) section.
 
-# Applicable GitHub Repositories
-- https://github.com/ImagineLearning/api-auth
+# Patching Builds
+1. Create a branch with changeset you want to start from (ie the changeset of the build currently in production).  The branch name should have the following format: patch/<patchName> 
+2. Checkout the branch you just created
+3. Use 'git cherry-pick <changeset>' to cherry pick the changeset(s) for use in the patch.
+4. Push your branch with the cherry picked changes to github
+5. Wait for the build to complete in teamcity.  The build will automatically deploy to the test environment.  It will bypass the pull-request process.
+6. Once the build is deployed to test, you can promote it using the usually means in [OctoDeploy](http://octodeploy/app#/)
